@@ -1,0 +1,10 @@
+name = "guestbook-worker"
+compatibility_date = "2024-04-01"
+
+[vars]
+DB = "your-d1-binding-name"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "guestbook"
+database_id = "your-d1-database-id"
