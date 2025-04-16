@@ -71,3 +71,31 @@
     </form>
     <div id="entries"></div>
 </section>
+
+<script>
+    const form = document.getElementById('guestForm');
+    const entriesDiv = document.getElementById('entries');
+
+    async function fetchEntries() {
+      const res = await fetch('/api/entries');
+      const data = await res.json();
+      entriesDiv.innerHTML = data.map(e => `<p><strong>${e.name}:</strong> ${e.message}</p>`).join('');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      await fetch('/api/entries', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: formData.get('name'),
+          message: formData.get('message')
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      form.reset();
+      fetchEntries();
+    });
+
+    fetchEntries();
+</script>
