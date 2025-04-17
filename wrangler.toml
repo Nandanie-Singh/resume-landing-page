@@ -5,4 +5,4 @@ compatibility_date = "2024-04-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "guestbook"
-database_id = "your-d1-database-id"
+database_id = "82c2d0c7-bc28-402f-aa64-878f30e07e50"
