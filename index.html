@@ -77,15 +77,16 @@
     const entriesDiv = document.getElementById('entries');
 
     async function fetchEntries() {
-      const res = await fetch('/api/entries');
+      const res = await fetch('/api/guestbook');
       const data = await res.json();
-      entriesDiv.innerHTML = data.map(e => `<p><strong>${e.name}:</strong> ${e.message}</p>`).join('');
+      entriesDiv.innerHTML = data.map(e => 
+        `<p><strong>${e.name ?? 'Anonymous'}:</strong> ${e.message}</p>`).join('');
     }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
-      await fetch('/api/entries', {
+      await fetch('/api/guestbook', {
         method: 'POST',
         body: JSON.stringify({
           name: formData.get('name'),
@@ -99,3 +100,4 @@
 
     fetchEntries();
 </script>
+
