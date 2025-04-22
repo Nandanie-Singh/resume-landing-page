@@ -74,30 +74,31 @@
 
 <script>
     const form = document.getElementById('guestForm');
-    const entriesDiv = document.getElementById('entries');
+const entriesDiv = document.getElementById('entries');
 
-    async function fetchEntries() {
-      const res = await fetch('/api/guestbook');
-      const data = await res.json();
-      entriesDiv.innerHTML = data.map(e => 
-        `<p><strong>${e.name ?? 'Anonymous'}:</strong> ${e.message}</p>`).join('');
-    }
+async function fetchEntries() {
+  const res = await fetch('/api/guestbook'); // <- Matches index.js
+  const data = await res.json();
+  entriesDiv.innerHTML = data.map(e => 
+    `<p><strong>${e.name}:</strong> ${e.message}</p>`).join('');
+}
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      await fetch('/api/guestbook', {
-        method: 'POST',
-        body: JSON.stringify({
-          name: formData.get('name'),
-          message: formData.get('message')
-        }),
-        headers: { 'Content-Type': 'application/json' }
-      });
-      form.reset();
-      fetchEntries();
-    });
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(form);
+  await fetch('/api/guestbook', {
+    method: 'POST',
+    body: JSON.stringify({
+      name: formData.get('name'),
+      message: formData.get('message')
+    }),
+    headers: { 'Content-Type': 'application/json' }
+  });
+  form.reset();
+  fetchEntries();
+});
 
-    fetchEntries();
+fetchEntries();
+
 </script>
 
