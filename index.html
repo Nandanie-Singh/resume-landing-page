@@ -77,7 +77,8 @@
 const entriesDiv = document.getElementById('entries');
 
 async function fetchEntries() {
-  const res = await fetch('/api/guestbook'); // <- Matches index.js
+    const res = await fetch('https://guestbook-worker.nandanie-singh.workers.dev/api/entries');
+    // <- Matches index.js
   const data = await res.json();
   entriesDiv.innerHTML = data.map(e => 
     `<p><strong>${e.name}:</strong> ${e.message}</p>`).join('');
@@ -86,7 +87,8 @@ async function fetchEntries() {
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = new FormData(form);
-  await fetch('/api/guestbook', {
+  await fetch('https://guestbook-worker.nandanie-singh.workers.dev/api/entries', {
+
     method: 'POST',
     body: JSON.stringify({
       name: formData.get('name'),
