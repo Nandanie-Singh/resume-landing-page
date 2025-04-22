@@ -1,6 +1,6 @@
 name = "guestbook-worker"
 main = "index.js"              
-compatibility_date = "2025-04-22"
+compatibility_date = "2025-04-10"
 
 [[d1_databases]]
 binding = "DB"
