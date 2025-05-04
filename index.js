@@ -27,7 +27,18 @@ export default {
     // Handle POST request to submit a new entry
     if (request.method === "POST" && url.pathname === "/api/entries") {
       try {
-        const { name, message } = await request.json();
+        let name, message;
+try {
+  const data = await request.json();
+  name = data.name;
+  message = data.message;
+} catch (err) {
+  return new Response(JSON.stringify({ error: "Invalid JSON" }), {
+    status: 400,
+    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+  });
+}
+
         if (!name || !message) {
           return new Response(JSON.stringify({ error: "Missing fields" }), { status: 400, headers });
         }
