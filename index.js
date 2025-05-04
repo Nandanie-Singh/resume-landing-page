@@ -1,37 +1,47 @@
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    const headers = {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type"
+    };
 
-    // GET entries
-    if (request.method === "GET" && url.pathname === "/api/entries") {
-      const { results } = await env.DB.prepare(
-        "SELECT id, name, message, created_at FROM entries ORDER BY created_at DESC"
-      ).all();
-
-      return new Response(JSON.stringify(results), {
-        headers: { "Content-Type": "application/json" }
+    // Handle CORS preflight request
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers
       });
     }
 
-    // POST entry
+    // Handle GET request to fetch guestbook entries
+    if (request.method === "GET" && url.pathname === "/api/entries") {
+      const { results } = await env.DB.prepare(
+        "SELECT name, message FROM entries ORDER BY id DESC LIMIT 10"
+      ).all();
+      return new Response(JSON.stringify(results), { headers });
+    }
+
+    // Handle POST request to submit a new entry
     if (request.method === "POST" && url.pathname === "/api/entries") {
       try {
         const { name, message } = await request.json();
-
         if (!name || !message) {
-          return new Response("Name and message are required", { status: 400 });
+          return new Response(JSON.stringify({ error: "Missing fields" }), { status: 400, headers });
         }
 
         await env.DB.prepare(
           "INSERT INTO entries (name, message) VALUES (?, ?)"
         ).bind(name, message).run();
 
-        return new Response("Entry submitted!", { status: 201 });
+        return new Response(JSON.stringify({ success: true }), { status: 201, headers });
       } catch (err) {
-        return new Response("Invalid JSON body", { status: 400 });
+        return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400, headers });
       }
     }
 
-    return new Response("Not found", { status: 404 });
+    return new Response("Not Found", { status: 404, headers });
   }
 };
