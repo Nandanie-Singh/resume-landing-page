@@ -87,13 +87,15 @@ form.addEventListener('submit', async (e) => {
   const formData = new FormData(form);
   try {
     const response = await fetch('https://guestbook-worker.nandanie-singh.workers.dev/api/entries', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: formData.get('name'),
-        message: formData.get('message')
-      }),
-      headers: { 'Content-Type': 'application/json' }
-    });
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: formData.get('name')?.trim(),
+    message: formData.get('message')?.trim()
+  })
+});
 
     if (response.ok) {
       alert('✅ Thank you! Your message was posted successfully.');
